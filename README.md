@@ -4,7 +4,7 @@
 
 - Every piece of work must be done on separate branch created from dev
 - No one works on the same branch
-- Once the piece of work is complete, everyone must be informed and a merge to dev must be done
+- Once the piece of work is complete, everyone must be informed and a merge to dev will be done
 - NEVER WORK ON MAIN BRANCH
 - NEVER PULL FROM MAIN BRANCH
 
