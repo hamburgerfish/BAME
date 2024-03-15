@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 0e3fff2cc5a978a4ca0452451f0c41c9
+guid: ba230b888c7ccd54497aff3da00de737
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -116,85 +116,22 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: guy
+      name: tomato
       rect:
         serializedVersion: 2
         x: 96
-        y: 48
+        y: 96
         width: 32
         height: 32
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 19c29781c47e3fc40b3e07c1deec0c88
-      internalID: -255411228
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: platform
-      rect:
-        serializedVersion: 2
-        x: 0
-        y: 131
-        width: 32
-        height: 32
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 9c64551f39b483f478614ba5600620df
-      internalID: 984002771
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: collision
-      rect:
-        serializedVersion: 2
-        x: 80
-        y: 208
-        width: 32
-        height: 32
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 1b04d94620c9f624dadc314e0b8e0069
-      internalID: 1132754038
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: death
-      rect:
-        serializedVersion: 2
-        x: 224
-        y: 112
-        width: 32
-        height: 32
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 65af8c1115cf11e45a66d1211a915a95
-      internalID: -1038549745
+      spriteID: a3fcc0567505b844c804916046d4bebe
+      internalID: -763951763
       vertices: []
       indices: 
       edges: []
@@ -210,10 +147,7 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
-      platform: 984002771
-      collision: 1132754038
-      death: -1038549745
-      guy: -255411228
+      tomato: -763951763
   spritePackingTag: 
   pSDRemoveMatte: 0
   pSDShowRemoveMatteOption: 0

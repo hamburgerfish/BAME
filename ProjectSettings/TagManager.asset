@@ -5,6 +5,8 @@ TagManager:
   serializedVersion: 2
   tags:
   - Collision
+  - pit
+  - lantern
   layers:
   - Default
   - TransparentFX
