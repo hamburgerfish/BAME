@@ -130,11 +130,17 @@ namespace controller
         [Tooltip("super dash time slow down factor")]
         public float superDashTimescale = 0.02f;
 
-        [Tooltip("super dash release force")]
-        public float superDashReleaseForce = 4;
+        [Tooltip("super dash vertical release force")]
+        public float superDashVerticalReleaseForce = 3;
+
+        [Tooltip("super dash horizontal release force")]
+        public float superDashHorizontalReleaseForce = 5;
 
         [Tooltip("hold dash duration to enter super dash")]
         public float timeDashHeldForSuper = 0.15f;
+
+        [Tooltip("maximum time in slowmo")]
+        public float maxSlowMoTime = 0.2f;
 
 
 
@@ -294,7 +300,7 @@ namespace controller
         #region Collisions
 
         private float _frameLeftGrounded = float.MinValue;
-        private bool _grounded;
+        public bool _grounded;
         private bool _wallSlide;
         private bool _wallJumpAvailable = false;
         private int _wallJumpDir;
@@ -421,11 +427,12 @@ namespace controller
 
         //upgrades
         private bool canUseDoubleJump => doubleJumpUnlocked && _doubleJumpUseable && _doubleJumpFlag;
-        private bool _dashing = false;
+        public bool _dashing = false;
 
         private void HandleJump()
         {
             if (!_endedJumpEarly && !_grounded && !_frameInput.jumpHeld && _rb.velocity.y > 0 && !_usedSuperDash) _endedJumpEarly = true;
+            if (_rb.velocity.y < 0) _endedJumpEarly = false;
 
             if (!_jumpToConsume && !hasBufferedJump || superDashSuccess) return;
 
@@ -493,6 +500,7 @@ namespace controller
         private bool _usedSuperDash;
         public bool lanternTouch;
         public float _timeHitLantern;
+        public float _timeSuperDashed;
 
         private void HandleDirection()
         {
@@ -540,10 +548,14 @@ namespace controller
                     _dashing = false;
                 }
             }
-            else if (superDashUnlocked && (_timeDashHeld - _timeHitLantern >= timeDashHeldForSuper) && !superDashSuccess) superDashSuccess = true;
+            else if (superDashUnlocked && (_timeDashHeld - _timeHitLantern >= timeDashHeldForSuper) && !superDashSuccess)
+            {
+                superDashSuccess = true;
+                _timeSuperDashed = _time;
+            }
             else if (superDashSuccess)
             {
-                if (_frameInput.dash)
+                if (_time < _timeSuperDashed + maxSlowMoTime && _frameInput.dash)
                 {
                     Time.timeScale = Mathf.MoveTowards(Time.timeScale, superDashTimescale, Time.timeScale * 0.1f);
                 }
@@ -552,10 +564,14 @@ namespace controller
                     superDashSuccess = false;
                     _usedSuperDash = true;
                     lanternTouch = false;
+                    _timeHitLantern = float.PositiveInfinity;
                     Time.timeScale = 1;
-                    _frameVelocity.x = superDashReleaseForce * _frameInput.move.x;
-                    _frameVelocity.y = superDashReleaseForce * _frameInput.move.y;
-                    _dashFlag = true;
+                    if (_frameInput.move.x != 0 || _frameInput.move.y != 0)
+                    {
+                        _frameVelocity.x = superDashHorizontalReleaseForce * _frameInput.move.x;
+                        _frameVelocity.y = superDashVerticalReleaseForce * _frameInput.move.y;
+                        _dashFlag = true;
+                    }
                 }
                 Time.fixedDeltaTime = this.fixedDeltaTime * Time.timeScale;
             }

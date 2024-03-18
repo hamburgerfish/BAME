@@ -14,6 +14,8 @@ GameObject:
   - component: {fileID: 7324826312629901170}
   - component: {fileID: 7324826312629901183}
   - component: {fileID: 7324826312629901168}
+  - component: {fileID: 5075709721590225560}
+  - component: {fileID: 1730450806}
   m_Layer: 6
   m_Name: Player
   m_TagString: Player
@@ -124,7 +126,7 @@ SpriteRenderer:
   m_SortingLayerID: 1531983325
   m_SortingLayer: 3
   m_SortingOrder: 0
-  m_Sprite: {fileID: -763951763, guid: ba230b888c7ccd54497aff3da00de737, type: 3}
+  m_Sprite: {fileID: 526149821, guid: ba230b888c7ccd54497aff3da00de737, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -209,8 +211,10 @@ MonoBehaviour:
   upgradedWallJumpVerticalPower: 1.5
   upgradedWallJumpTimer: 0.1
   superDashTimescale: 0.02
-  superDashReleaseForce: 4
+  superDashVerticalReleaseForce: 3
+  superDashHorizontalReleaseForce: 5
   timeDashHeldForSuper: 0.15
+  maxSlowMoTime: 0.2
   doubleJumpUnlocked: 1
   splatResistanceUnlocked: 1
   glideUnlocked: 1
@@ -220,9 +224,46 @@ MonoBehaviour:
   _frameVelocity: {x: 0, y: 0}
   _respawnPoint: {x: 0, y: 0}
   camReset: 0
+  _grounded: 0
   _endedJumpEarly: 0
   _timeJumpWasPressed: 0
   _timeDashHeld: 0
   superDashSuccess: 0
   lanternTouch: 0
   _timeHitLantern: 0
+  _timeSuperDashed: 0
+--- !u!95 &5075709721590225560
+Animator:
+  serializedVersion: 4
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7324826312629901175}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: cd9db2f32b2f53944958d156e6050e2c, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
+--- !u!114 &1730450806
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7324826312629901175}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b96ed6fe92230804589f19ef53d44ea1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  pm: {fileID: 7324826312629901168}
+  jumpUpMinVelocity: 0.5
+  jumpDownMinVelocity: 0.7
