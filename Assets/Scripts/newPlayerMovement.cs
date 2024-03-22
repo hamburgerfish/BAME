@@ -445,7 +445,7 @@ namespace controller
 
         private void HandleJump()
         {
-            if (!_endedJumpEarly && !_grounded && !_frameInput.jumpHeld && _rb.velocity.y > 0 && !_usedSuperDash) _endedJumpEarly = true;
+            if (!_endedJumpEarly && !_grounded && !_frameInput.jumpHeld && _rb.velocity.y > 0 && !_usedSuperDash && !_dashing) _endedJumpEarly = true;
             if (_rb.velocity.y < 0) _endedJumpEarly = false;
 
             if (!_jumpToConsume && !hasBufferedJump || superDashSuccess) return;
@@ -515,8 +515,8 @@ namespace controller
         public float _timeDashHeld;
         public bool superDashSuccess;
         public bool _usedSuperDash;
-        public bool lanternTouch;
-        public float _timeHitLantern;
+        public bool lanternTouch; // used in lanternAnimControl.cs
+        public float _timeHitLantern; // used in lanternAnimControl.cs
         public float _timeSuperDashed;
         public bool superDashReleased;
 
@@ -554,12 +554,6 @@ namespace controller
                 }
                 _frameVelocity.x = dashHorizontalVelocity * facingDir;
                 _frameVelocity.y = Mathf.MoveTowards(_frameVelocity.y, dashVerticalVelocity * _frameInput.move.y, FallAcceleration * Time.fixedDeltaTime);
-                // super dash
-                if (Physics2D.OverlapCircle(_col.bounds.center, 0.1f, LanternLayer) && !lanternTouch)
-                {
-                    lanternTouch = true;
-                    _timeHitLantern = _time;
-                }
                 // super dash
                 if (_time > _timeDashed + dashTime)
                 {
