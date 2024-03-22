@@ -158,14 +158,14 @@ namespace controller
         private Rigidbody2D _rb;
         private CapsuleCollider2D _col;
         private BoxCollider2D _bcol;
-        private FrameInput _frameInput;
+        public FrameInput _frameInput;
         public Vector2 _frameVelocity;
         private bool _cachedQueryStartInColliders;
-        private bool _active = true;
+        public bool _active = true;
         public Vector2 _respawnPoint;
 
 
-        private float _time;
+        public float _time;
         private float fixedDeltaTime;
 
         private void Awake()
@@ -275,6 +275,8 @@ namespace controller
                 player.transform.position = _respawnPoint;
                 _active = true;
                 camReset = true;
+                rightSplat = false;
+                leftSplat = false;
                 _rb.constraints = RigidbodyConstraints2D.FreezeRotation;
             }
         }
@@ -301,9 +303,11 @@ namespace controller
 
         private float _frameLeftGrounded = float.MinValue;
         public bool _grounded;
-        private bool _wallSlide;
+        public bool _wallSlide;
         private bool _wallJumpAvailable = false;
-        private int _wallJumpDir;
+        public int _wallJumpDir;
+        public bool rightSplat = false;
+        public bool leftSplat = false;
 
         //upgrades
         private bool _doubleJumpUseable;
@@ -329,11 +333,14 @@ namespace controller
                 if (!splatResistanceUnlocked && _frameVelocity.x >= splatVelocity)
                 {
                     splat();
+                    rightSplat = true;
                     return;
                 }
                 _frameVelocity.x = Mathf.Min(0, _frameVelocity.x);
                 _wallJumpDir = -1;
+                if (!_grounded && !_dashing) facingDir = -1;
                 _wallSlide = true;
+                unstick = false;
                 if (_frameVelocity.y <= wallSpeed) _frameVelocity.y = Mathf.MoveTowards(_frameVelocity.y, -wallSpeed, wallDeceleration * Time.fixedDeltaTime);
             }
 
@@ -342,17 +349,21 @@ namespace controller
                 if (!splatResistanceUnlocked && _frameVelocity.x <= -splatVelocity)
                 {
                     splat();
+                    leftSplat = true;
                     return;
                 }
                 _frameVelocity.x = Mathf.Max(0, _frameVelocity.x);
                 _wallJumpDir = 1;
+                if (!_grounded && !_dashing) facingDir = 1;
                 _wallSlide = true;
+                unstick = false;
                 if (_frameVelocity.y <= wallSpeed) _frameVelocity.y = Mathf.MoveTowards(_frameVelocity.y, -wallSpeed, wallDeceleration * Time.fixedDeltaTime);
             }
-            else 
+            else
             {
                 _wallSlide = false;
                 _wallJumpDir = 0;
+                unstick = true;
             }
 
             // Hit Ceiling
@@ -422,11 +433,14 @@ namespace controller
         private bool _coyoteUsable;
         public float _timeJumpWasPressed;
         private float _frameWallJumped;
+        private bool unstick = true;
         private bool hasBufferedJump => _bufferedJumpUseable && _time < _timeJumpWasPressed + JumpBuffer;
         private bool canUseCoyote => _coyoteUsable && !_grounded && _time < _frameLeftGrounded + CoyoteTime;
+        public bool createJumpDust;
 
         //upgrades
         private bool canUseDoubleJump => doubleJumpUnlocked && _doubleJumpUseable && _doubleJumpFlag;
+        public float _timeDoubleJumped;
         public bool _dashing = false;
 
         private void HandleJump()
@@ -454,6 +468,7 @@ namespace controller
             _frameVelocity.y = JumpPower;
             if (_dashing) _dashing = false;
             _usedSuperDash = false;
+            createJumpDust = true;
         }
 
         private void executeDoubleJump()
@@ -468,6 +483,7 @@ namespace controller
             _doubleJumpFlag = false;
             if (_dashing) _dashing = false;
             _usedSuperDash = false;
+            _timeDoubleJumped = _time;
         }
 
         private void executeWallJump()
@@ -479,6 +495,7 @@ namespace controller
             _frameVelocity.y = wallJumpVerticalPower;
             _frameVelocity.x = wallJumpHorizontalPower * _wallJumpDir;
             _usedSuperDash = false;
+            unstick = true;
         }
 
         #endregion
@@ -488,19 +505,20 @@ namespace controller
         private float timeHeldRight;
         private float timeHeldLeft;
         private int heldDir;
-        private int facingDir = 1;
+        public int facingDir = 1;
 
         //upgrades
-        private bool canUseGlide => glideUnlocked && !_grounded && !_wallSlide && _time > _timeGlideWasPressed + glideDelay;
+        public bool canUseGlide => glideUnlocked && !_grounded && !_wallSlide && _time > _timeGlideWasPressed + glideDelay;
         private bool canUseDash => dashUnlocked && _dashFlag;
-        private float _timeDashed;
+        public float _timeDashed;
         private float _timeDashWasPressed;
         public float _timeDashHeld;
         public bool superDashSuccess;
-        private bool _usedSuperDash;
+        public bool _usedSuperDash;
         public bool lanternTouch;
         public float _timeHitLantern;
         public float _timeSuperDashed;
+        public bool superDashReleased;
 
         private void HandleDirection()
         {
@@ -519,8 +537,8 @@ namespace controller
 
             if (_frameInput.move.x > 0 && !_dashing) facingDir = 1;
             else if (_frameInput.move.x < 0 && !_dashing) facingDir = -1;
-            else if (_wallJumpDir == -1 && !_dashing) facingDir = 1;
-            else if (_wallJumpDir == 1 && !_dashing) facingDir = -1;
+            
+            if (Mathf.Abs(_frameVelocity.x) <= Mathf.Abs(MaxSpeed) && Mathf.Abs(_frameVelocity.y) <= MaxFallSpeed) superDashReleased = false;
 
             if (_grounded) _dashFlag = true;
 
@@ -571,6 +589,7 @@ namespace controller
                         _frameVelocity.x = superDashHorizontalReleaseForce * _frameInput.move.x;
                         _frameVelocity.y = superDashVerticalReleaseForce * _frameInput.move.y;
                         _dashFlag = true;
+                        superDashReleased = true;
                     }
                 }
                 Time.fixedDeltaTime = this.fixedDeltaTime * Time.timeScale;
@@ -590,7 +609,8 @@ namespace controller
                     else if (canUseGlide && _frameInput.glide) deceleration = horizontalGlideDeceleration;
                     _frameVelocity.x = Mathf.MoveTowards(_frameVelocity.x, 0, deceleration * Time.fixedDeltaTime);
                 }
-                else if (_grounded || !_wallSlide || !_dashing || (_wallSlide && (heldDir * _time <= -timeHeldLeft - wallJumpStuckTimer || heldDir * _time >= timeHeldRight + wallJumpStuckTimer)))
+
+                else if (_grounded || !_wallSlide || (!_dashing && _wallSlide && (unstick || (heldDir * _time <= -timeHeldLeft - wallJumpStuckTimer || heldDir * _time >= timeHeldRight + wallJumpStuckTimer))))
                 {
                     if (_time >= wallJumpTimer + _frameWallJumped || _frameInput.move.x * _wallJumpDir > 0)
                     {
@@ -611,6 +631,7 @@ namespace controller
                         _frameVelocity.x = Mathf.MoveTowards(_frameVelocity.x, _frameInput.move.x * MaxSpeed, currentAcceleration * Time.fixedDeltaTime);
                     }
                 }
+                else _frameVelocity.x = 0;
             }
         }
 

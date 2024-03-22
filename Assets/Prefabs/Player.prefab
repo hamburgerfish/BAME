@@ -16,6 +16,7 @@ GameObject:
   - component: {fileID: 7324826312629901168}
   - component: {fileID: 5075709721590225560}
   - component: {fileID: 1730450806}
+  - component: {fileID: 8843499975658961873}
   m_Layer: 6
   m_Name: Player
   m_TagString: Player
@@ -222,16 +223,28 @@ MonoBehaviour:
   betterWallJumpUnlocked: 1
   superDashUnlocked: 1
   _frameVelocity: {x: 0, y: 0}
+  _active: 1
   _respawnPoint: {x: 0, y: 0}
+  _time: 0
   camReset: 0
   _grounded: 0
+  _wallSlide: 0
+  _wallJumpDir: 0
+  rightSplat: 0
+  leftSplat: 0
   _endedJumpEarly: 0
   _timeJumpWasPressed: 0
+  createJumpDust: 0
+  _timeDoubleJumped: 0
+  _dashing: 0
+  facingDir: 1
+  _timeDashed: 0
   _timeDashHeld: 0
   superDashSuccess: 0
   lanternTouch: 0
   _timeHitLantern: 0
   _timeSuperDashed: 0
+  superDashReleased: 0
 --- !u!95 &5075709721590225560
 Animator:
   serializedVersion: 4
@@ -267,3 +280,24 @@ MonoBehaviour:
   pm: {fileID: 7324826312629901168}
   jumpUpMinVelocity: 0.5
   jumpDownMinVelocity: 0.7
+--- !u!114 &8843499975658961873
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7324826312629901175}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e63a0fcf9a612764c8170bd7ffb2f31f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  pm: {fileID: 7324826312629901168}
+  doubleJumpParticle: {fileID: 840315297848777165, guid: dc12ded3f416ec741b73e69843fe2065, type: 3}
+  jumpDustParticle: {fileID: 3463131343937553428, guid: 3e9319274665fe2438b7b08fcd7a1242, type: 3}
+  dashParticle: {fileID: 4496252589931667792, guid: 20f71d5a188fd1249b41fa65b2521afd, type: 3}
+  superDashParticleInner: {fileID: 359132277024535981, guid: 62e74b8b45dce904784a9f58587af31f, type: 3}
+  superDashParticleOuter: {fileID: 8149353096561232937, guid: 68d0aa0dc433db04a9b3c61e60451741, type: 3}
+  dashParticleSpawnFrames: 10
+  dashFrameTick: 10
+  superDashParticleRot: 0
